@@ -1,0 +1,146 @@
+---
+--- 
+<head>
+  <meta charset="UTF-8" />
+  <!-- DataTables base CSS -->
+  <link rel="stylesheet" href="https://cdn.datatables.net/2.3.4/css/dataTables.dataTables.css" />
+  <!-- Tema oscuro oficial de DataTables -->
+  <link rel="stylesheet" href="https://cdn.datatables.net/2.3.4/css/dataTables.dataTables.css" />
+</head>
+
+
+<!-- Contenedor principal con fondo y espaciado -->
+<div class="min-h-screen flex flex-col items-center justify-start bg-gradient-to-br from-blue-900 via-blue-700 to-cyan-600 py-10">
+  <!-- Botones para mostrar cada apéndice -->
+  <div class="flex gap-4 mb-8">
+    <button class="px-6 py-2 rounded-xl shadow font-semibold border bg-blue-600 text-white border-cyan-400" onclick="fetchAppendix(1)">Apéndice 1</button>
+    <button class="px-6 py-2 rounded-xl shadow font-semibold border bg-blue-600 text-white border-cyan-400" onclick="fetchAppendix(2)">Apéndice 2</button>
+    <button class="px-6 py-2 rounded-xl shadow font-semibold border bg-blue-600 text-white border-cyan-400" onclick="fetchAppendix(3)">Apéndice 3</button>
+  </div>
+
+  <!-- Sección de Apéndice 1: Permisos -->
+  <div id="ap1" class="appendix-table w-full max-w-5xl" style="display:block;">
+    <h2 class="text-2xl font-bold mb-4 text-cyan-200">Apéndice 1 – Catálogo de Permisos</h2>
+    <div id="ap1-table-container"></div>
+  </div>
+  <!-- Sección de Apéndice 2: Productos -->
+  <div id="ap2" class="appendix-table w-full max-w-5xl" style="display:none;">
+    <h2 class="text-2xl font-bold mb-4 text-cyan-200">Apéndice 2 – Catálogo de Productos</h2>
+    <div id="ap2-table-container"></div>
+  </div>
+  <!-- Sección de Apéndice 3: Unidades de Medida -->
+  <div id="ap3" class="appendix-table w-full max-w-5xl" style="display:none;">
+    <h2 class="text-2xl font-bold mb-4 text-cyan-200">Apéndice 3 – Catálogo de Unidades de Medida</h2>
+    <div id="ap3-table-container"></div>
+  </div>
+</div>
+
+
+<!-- Inclusión de la librería DataTables JS -->
+<script src="https://cdn.datatables.net/2.3.3/js/dataTables.min.js"></script>
+
+
+<script>
+// Configuración de cada apéndice: API, columnas, contenedor y ID de tabla
+const config = [
+  {
+    // Apéndice 1: Permisos
+    api: 'http://localhost:4321/api/permisos',
+    columns: [
+      { key: 'id', label: 'ID Permiso' },
+      { key: 'clave', label: 'Tipo Carácter' },
+      { key: 'descripcion', label: 'Modalidad Permiso' },
+      { key: 'patron', label: 'Num Permiso' }
+    ],
+    container: 'ap1-table-container',
+    tableId: 'ap1-table'
+  },
+  {
+    // Apéndice 2: Productos
+    api: 'http://localhost:4321/api/productos',
+    columns: [
+      { key: 'id', label: 'ID Producto' },
+      { key: 'clave', label: 'Clave Producto' },
+      { key: 'descripcion_producto', label: 'Descripción Producto' },
+      { key: 'unidad_medida', label: 'Unidad Medida' },
+      { key: 'descripcion_unidad', label: 'Descripción Unidad' }
+    ],
+    container: 'ap2-table-container',
+    tableId: 'ap2-table'
+  },
+  {
+    // Apéndice 3: Unidades de Medida
+    api: 'http://localhost:4321/api/unidades',
+    columns: [
+      { key: 'id', label: 'ID Unidad' },
+      { key: 'clave', label: 'Clave Unidad' },
+      { key: 'descripcion', label: 'Descripción Unidad' }
+    ],
+    container: 'ap3-table-container',
+    tableId: 'ap3-table'
+  }
+];
+
+/**
+ * Renderiza una tabla DataTable en el contenedor indicado
+ * @param {string} containerId - ID del contenedor donde se inserta la tabla
+ * @param {string} tableId - ID de la tabla a crear
+ * @param {Array} columns - Definición de columnas
+ * @param {Array} data - Datos a mostrar
+ */
+function renderTable(containerId, tableId, columns, data) {
+  const container = document.getElementById(containerId);
+  if (!container) return;
+
+  // Limpiar contenedor antes de renderizar
+  container.innerHTML = '';
+
+  // Crear estructura de tabla vacía
+  let html = `<table id="${tableId}" class="display nowrap w-full"></table>`;
+  container.innerHTML = html;
+
+  // Definir columnas para DataTables
+  const columnDefs = columns.map(col => ({ data: col.key, title: col.label }));
+
+  // Inicializar DataTable con tema oscuro y opciones
+  new DataTable(`#${tableId}`, {
+    data: data,
+    columns: columnDefs,
+    responsive: true,
+    pageLength: 10,
+    language: {
+      url: "https://cdn.datatables.net/plug-ins/2.3.3/i18n/es-ES.json"
+    }
+  });
+}
+
+/**
+ * Muestra el apéndice seleccionado y carga los datos si es necesario
+ * @param {number} num - Número de apéndice a mostrar (1, 2 o 3)
+ */
+window.fetchAppendix = async function(num) {
+  // Oculta todos los apéndices
+  document.querySelectorAll('.appendix-table').forEach(e => e.style.display = 'none');
+  // Muestra el apéndice seleccionado
+  document.getElementById('ap' + num).style.display = 'block';
+
+  const cfg = config[num - 1];
+  if (!cfg) return;
+
+  const container = document.getElementById(cfg.container);
+  // Si ya hay una tabla, no vuelve a cargar
+  if (!container || container.querySelector('table')) return;
+
+  // Solicita los datos a la API correspondiente
+  const res = await fetch(cfg.api);
+  const data = await res.json();
+
+  // Renderiza la tabla con los datos obtenidos
+  renderTable(cfg.container, cfg.tableId, cfg.columns, data);
+}
+
+// Render inicial al cargar la página: muestra Apéndice 1
+document.addEventListener('DOMContentLoaded', () => {
+  fetchAppendix(1);
+});
+</script>

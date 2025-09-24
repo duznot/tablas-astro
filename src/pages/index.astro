@@ -1,11 +1,18 @@
----
-import Welcome from '../components/Welcome.astro';
-import Layout from '../layouts/Layout.astro';
 
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
----
-
-<Layout>
-	<Welcome />
-</Layout>
+<head>
+	<meta charset="UTF-8" />
+	<link href="/src/assets/styles.css" rel="stylesheet">
+	<!-- DataTables base CSS -->
+	<link rel="stylesheet" href="https://cdn.datatables.net/2.3.4/css/dataTables.dataTables.css" />
+	<!-- Tema oscuro oficial -->
+	<link rel="stylesheet" href="https://cdn.datatables.net/2.3.4/css/dataTables.dataTables.css" />
+</head>
+<div class="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-900 via-blue-700 to-cyan-600">
+	<div class="bg-blue-950 bg-opacity-80 rounded-2xl shadow-2xl p-10 w-full max-w-xl border border-blue-800">
+		<h1 class="text-4xl font-bold mb-8 text-cyan-200 text-center drop-shadow">Reportes</h1>
+		<div class="grid grid-cols-1 gap-6">
+			<a href="/diario" class="px-6 py-3 bg-cyan-600 hover:bg-cyan-700 text-cyan-100 border border-cyan-400 rounded-xl shadow transition-all duration-200 text-lg font-semibold text-center">Reporte Diario</a>
+			<a href="/mensual" class="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-cyan-100 border border-cyan-400 rounded-xl shadow transition-all duration-200 text-lg font-semibold text-center">Reporte Mensual</a>
+		</div>
+	</div>
+</div>

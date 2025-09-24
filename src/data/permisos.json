@@ -1,0 +1,4 @@
+[
+  {"ID": 1, "Clave": "PERM01", "Descripción": "Permiso de acceso"},
+  {"ID": 2, "Clave": "PERM02", "Descripción": "Permiso de edición"}
+]

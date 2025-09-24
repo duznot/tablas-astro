@@ -1,0 +1,77 @@
+---
+
+---
+
+<div class="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-900 via-blue-700 to-cyan-600">
+	<div class="bg-blue-950 bg-opacity-80 rounded-2xl shadow-2xl p-10 w-full max-w-4xl border border-blue-800">
+		<h1 class="text-3xl font-bold mb-8 text-cyan-200 text-center drop-shadow">Apéndice 3 Diario – Eventos</h1>
+		<div class="overflow-x-auto">
+			<table id="apendice3Table" class="display min-w-full border border-gray-300 rounded-2xl shadow bg-white">
+				<thead class="bg-gray-100">
+					<tr>
+						<th>ID</th>
+						<th>Clave</th>
+						<th>Descripción</th>
+					</tr>
+				</thead>
+				<tbody>
+				</tbody>
+			</table>
+		</div>
+	</div>
+</div>
+<link rel="stylesheet" href="/datatables.min.css" />
+<script src="/jquery.min.js"></script>
+<script src="/datatables.min.js"></script>
+<script is:inline>
+	document.addEventListener('DOMContentLoaded', function() {
+		fetch('/api/unidades')
+			.then(res => res.json())
+			.then(data => {
+				const tbody = document.querySelector('#apendice3Table tbody');
+				tbody.innerHTML = '';
+				data.forEach(row => {
+					tbody.innerHTML += `<tr>
+						<td>${row.id ?? ''}</td>
+						<td>${row.clave ?? ''}</td>
+						<td>${row.descripcion ?? ''}</td>
+					</tr>`;
+				});
+				if (window.jQuery && window.jQuery.fn.DataTable) {
+					window.jQuery('#apendice3Table').DataTable();
+				}
+			});
+	});
+</script>
+
+---
+const eventos = [
+	{ id: 1, clave: "FAL", descripcion: "Falla técnica" },
+	{ id: 2, clave: "EMR", descripcion: "Emergencia" },
+];
+---
+<link rel="stylesheet" href="https://cdn.datatables.net/2.3.4/css/dataTables.dataTables.css" />
+<script src="//cdn.datatables.net/2.3.3/js/dataTables.min.js"></script>
+<table id="apendice3" class="display">
+	<thead>
+		<tr>
+			<th>ID</th>
+			<th>Clave</th>
+			<th>Descripción</th>
+		</tr>
+	</thead>
+	<tbody>
+		{eventos.map((e) => (
+			<tr>
+				<td>{e.id}</td>
+				<td>{e.clave}</td>
+				<td>{e.descripcion}</td>
+			</tr>
+		))}
+	</tbody>
+</table>
+<script>
+	document.addEventListener("DOMContentLoaded", () => {
+		new window.DataTable("#apendice3");
+	});
+</script>

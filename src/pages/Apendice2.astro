@@ -1,0 +1,90 @@
+
+<div class="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-900 via-blue-700 to-cyan-600">
+	<div class="bg-blue-950 bg-opacity-80 rounded-2xl shadow-2xl p-10 w-full max-w-4xl border border-blue-800">
+		<h1 class="text-3xl font-bold mb-8 text-cyan-200 text-center drop-shadow">Apéndice 2 Diario – Productos</h1>
+		<div class="overflow-x-auto">
+			<table id="apendice2Table" class="display min-w-full border border-gray-300 rounded-2xl shadow bg-white">
+				<thead class="bg-gray-100">
+					<tr>
+						<th>ID</th>
+						<th>Clave</th>
+						<th>Descripción Producto</th>
+						<th>Clave Subproducto</th>
+						<th>Descripción Subproducto</th>
+						<th>Unidad Medida</th>
+						<th>Descripción Unidad</th>
+					</tr>
+				</thead>
+				<tbody>
+				</tbody>
+			</table>
+		</div>
+	</div>
+</div>
+<link rel="stylesheet" href="https://cdn.datatables.net/2.3.4/css/dataTables.dataTables.css" />
+<script src="/jquery.min.js"></script>
+<script src="/datatables.min.js"></script>
+<script is:inline>
+	document.addEventListener('DOMContentLoaded', function() {
+		fetch('/api/productos')
+			.then(res => res.json())
+			.then(data => {
+				const tbody = document.querySelector('#apendice2Table tbody');
+				tbody.innerHTML = '';
+				data.forEach(row => {
+					tbody.innerHTML += `<tr>
+						<td>${row.id ?? ''}</td>
+						<td>${row.clave ?? ''}</td>
+						<td>${row.descripcion_producto ?? ''}</td>
+						<td>${row.clave_subproducto ?? ''}</td>
+						<td>${row.descripcion_subproducto ?? ''}</td>
+						<td>${row.unidad_medida ?? ''}</td>
+						<td>${row.descripcion_unidad ?? ''}</td>
+					</tr>`;
+				});
+				if (window.jQuery && window.jQuery.fn.DataTable) {
+					window.jQuery('#apendice2Table').DataTable();
+				}
+			});
+	});
+</script>
+
+---
+const productos = [
+	{ id: 1, clave: "GAS", descripcion_producto: "Gasolina", clave_subproducto: "", descripcion_subproducto: "", unidad_medida: "LTR", descripcion_unidad: "Litros" },
+	{ id: 2, clave: "DSL", descripcion_producto: "Diésel", clave_subproducto: "", descripcion_subproducto: "", unidad_medida: "LTR", descripcion_unidad: "Litros" },
+];
+---
+<link rel="stylesheet" href="//cdn.datatables.net/2.3.3/css/dataTables.dataTables.min.css" />
+<script src="//cdn.datatables.net/2.3.3/js/dataTables.min.js"></script>
+<table id="apendice2" class="display">
+	<thead>
+		<tr>
+			<th>ID</th>
+			<th>Clave</th>
+			<th>Descripción Producto</th>
+			<th>Clave Subproducto</th>
+			<th>Descripción Subproducto</th>
+			<th>Unidad Medida</th>
+			<th>Descripción Unidad</th>
+		</tr>
+	</thead>
+	<tbody>
+		{productos.map((p) => (
+			<tr>
+				<td>{p.id}</td>
+				<td>{p.clave}</td>
+				<td>{p.descripcion_producto}</td>
+				<td>{p.clave_subproducto}</td>
+				<td>{p.descripcion_subproducto}</td>
+				<td>{p.unidad_medida}</td>
+				<td>{p.descripcion_unidad}</td>
+			</tr>
+		))}
+	</tbody>
+</table>
+<script>
+	document.addEventListener("DOMContentLoaded", () => {
+		new window.DataTable("#apendice2");
+	});
+</script>

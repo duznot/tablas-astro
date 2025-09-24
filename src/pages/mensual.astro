@@ -1,0 +1,48 @@
+---
+// Importa el componente de tabla reutilizable
+import Table from "../components/Table.astro";
+
+// Definición de columnas para cada apéndice mensual
+const columnsPermisos = ["id_permiso", "tipo_caracter", "modalidad_permiso", "num_permiso"];
+const columnsProductos = ["id_producto", "clave_producto", "descripcion_producto"];
+const columnsUnidades = ["id_unidad", "clave_unidad", "descripcion_unidad"];
+
+// Variables para almacenar los datos de cada apéndice
+let permisos = [];
+let productos = [];
+let unidades = [];
+---
+<head>
+  <meta charset="UTF-8" />
+  <!-- DataTables base CSS -->
+  <link rel="stylesheet" href="https://cdn.datatables.net/2.3.3/css/dataTables.dataTables.min.css" />
+  <!-- Tema oscuro oficial de DataTables -->
+  <link rel="stylesheet" href="https://cdn.datatables.net/2.3.3/css/dataTables.dataTables-dark.min.css" />
+</head>
+
+<!-- Contenedor principal con fondo degradado y centrado -->
+<div class="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-900 via-blue-700 to-cyan-600">
+  <div class="bg-blue-950 bg-opacity-80 rounded-2xl shadow-2xl p-10 w-full max-w-6xl border border-blue-800">
+    <!-- Título principal del reporte mensual -->
+    <h1 class="text-3xl font-bold mb-8 text-cyan-200 text-center drop-shadow">Reporte Mensual</h1>
+    
+    <!-- Botones de acción: descargar Excel y volver -->
+    <div class="flex gap-4 mb-6 justify-center">
+      <a href="/api/exportar_mensual" class="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-cyan-100 border border-cyan-400 rounded-xl shadow transition-all duration-200 text-lg font-semibold">Descargar Excel</a>
+      <button class="px-6 py-3 bg-cyan-700 hover:bg-cyan-800 text-cyan-100 border border-cyan-400 rounded-xl shadow transition-all duration-200 text-lg font-semibold" onclick="window.history.back()">Volver</button>
+    </div>
+
+    <!-- Botones para mostrar cada apéndice mensual -->
+    <div class="flex gap-4 mb-8 justify-center">
+      <button class="px-6 py-2 rounded-xl shadow font-semibold border bg-blue-600 text-white border-cyan-400" onclick="fetchAppendixMensual(1)">Apéndice Mensual 1  Permisos</button>
+      <button class="px-6 py-2 rounded-xl shadow font-semibold border bg-blue-600 text-white border-cyan-400" onclick="fetchAppendixMensual(2)">Apéndice Mensual 2  Productos</button>
+      <button class="px-6 py-2 rounded-xl shadow font-semibold border bg-blue-600 text-white border-cyan-400" onclick="fetchAppendixMensual(3)">Apéndice Mensual 3  Unidades de Medida</button>
+    </div>
+
+    <!-- Contenedor donde se renderiza la tabla dinámica del apéndice seleccionado -->
+    <div id="apendice-table-container" class="w-full"></div>
+  </div>
+</div>
+
+<!-- Script para manejar la carga dinámica de los apéndices mensuales -->
+<script type="module" src="/src/scripts/fetchAppendixMensual.js"></script>

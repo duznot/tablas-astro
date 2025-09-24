@@ -1,0 +1,29 @@
+
+---
+export interface Props {
+  columns: string[];
+  data: any[];
+}
+const { columns, data } = Astro.props;
+---
+
+<table id="myTable" class="min-w-full border border-gray-300 rounded-2xl shadow">
+  <thead class="bg-gray-100">
+    <tr>
+      {columns.map((col) => (
+        <th class="px-4 py-2 text-left">{col}</th>
+      ))}
+    </tr>
+  </thead>
+  <tbody>
+    {data.map((row) => (
+      <tr class="hover:bg-gray-50">
+        {columns.map((col) => (
+          <td class="px-4 py-2 border-t">{row[col]}</td>
+        ))}
+      </tr>
+    ))}
+  </tbody>
+</table>
+
+
